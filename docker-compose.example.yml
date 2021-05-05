@@ -1,0 +1,57 @@
+version: "3.7"
+
+services:
+  asterisk-fastagi-reverselookup-googlecontacts:
+    build: .
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.0
+    container_name: asterisk-fastagi-reverselookup-googlecontacts
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - asterisk-fastagi-redis
+    environment:
+      REDIS_HOST: "localhost"
+      REDIS_PORT: 6379
+      HOST: "0.0.0.0"
+      PORT: 4573
+      TIMEOUT: 2
+
+  asterisk-fastagi-reverselookup-googlecontacts-cronjob:
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.0
+    container_name: asterisk-fastagi-reverselookup-googlecontacts-cronjob
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - asterisk-fastagi-redis
+    command: [ "/usr/sbin/cron", "-f" , "-L",  "> /dev/stdout " ]
+    environment:
+      GOOGLE_ACCOUNTS: "user1@domain.com, user2@domain.com"
+      REDIS_HOST: "localhost"
+      REDIS_PORT: 6379
+      SERVICE_ACCOUNT_JSON: '{
+                               "type": "service_account",
+                               "project_id": "<myproject-id>",
+                               "private_key_id": "<private-key id>",
+                               "private_key": "<private key data>",
+                               "client_email": "<client-email of your key>",
+                               "client_id": "<client-id of your key>",
+                               "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+                               "token_uri": "https://oauth2.googleapis.com/token",
+                               "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+                               "client_x509_cert_url": "<cert-url of your key>"
+                             }'
+
+  asterisk-fastagi-redis:
+    image: redis
+    restart: unless-stopped
+    container_name: asterisk-fastagi-redis
+    network_mode: host
+    volumes:
+      - /opt/asterisk-redis:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli","ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+

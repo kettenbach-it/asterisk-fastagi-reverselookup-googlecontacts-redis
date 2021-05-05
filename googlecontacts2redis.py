@@ -1,4 +1,4 @@
-# pylint: disable=invalid-name
+# pylint: disable=invalid-name,,duplicate-code
 """
 Load all contacts from given accounts into redis
 """
@@ -11,10 +11,13 @@ import redis
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
+js = os.environ.get("SERVICE_ACCOUNT_JSON")
+js = js.strip("\'")
+
 config = {"GOOGLE_ACCOUNTS": os.environ.get("GOOGLE_ACCOUNTS").split(","),
           "REDIS_HOST": os.environ.get("REDIS_HOST"),
           "REDIS_PORT": os.environ.get("REDIS_PORT"),
-          "SERVICE_ACCOUNT_JSON": json.loads(os.environ.get("SERVICE_ACCOUNT_JSON"))}
+          "SERVICE_ACCOUNT_JSON": json.loads(js)}
 
 if config["GOOGLE_ACCOUNTS"] is not None \
         and config["REDIS_HOST"] is not None \

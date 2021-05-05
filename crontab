@@ -1,0 +1,2 @@
+@reboot /usr/local/bin/python3 /srv/googlecontacts2redis.py
+0 8,14,18 * * * /usr/local/bin/python3 /srv/googlecontacts2redis.py
