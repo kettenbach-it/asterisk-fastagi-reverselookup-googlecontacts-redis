@@ -90,7 +90,7 @@ class FastAGI(socketserver.StreamRequestHandler):
                                 if row[0] == nat_vorwahl:
                                     new_callerid = "\"" + row[1] + " <" + number_nat.replace(" ", "") + ">"
 
-            print(new_callerid)
+            print(datetime.now().strftime("%Y-%m-%d %H:%M:%S: ") + new_callerid)
             self.wfile.write(b"SET CALLERID \"%s\"" % new_callerid.encode())
             self.wfile.flush()
 
