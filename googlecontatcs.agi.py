@@ -57,6 +57,7 @@ class FastAGI(socketserver.StreamRequestHandler):
                 is_international = True
             else:
                 is_international = False
+            new_callerid = number_nat.replace(" ", "")
 
             # If contact is found in redis
             if red.get(number_formatted) is not None:
@@ -67,14 +68,8 @@ class FastAGI(socketserver.StreamRequestHandler):
                 except KeyError:
                     pass
 
-                new_callerid_num = number_nat.replace(" ", "")
-                new_callerid_name = "\"" + contact["displayName"] + " (" + contact["numberType"] + ") (" + \
-                               contact["eMail"] + org + ")"
-                new_callerid = new_callerid_name + " <" + new_callerid_num + ">\""
-
-                # agi.set_variable seems to be broken, so we write to stdout instead:
-                # agi.set_callerid(new_callerid)
-                self.wfile.write(b"SET VARIABLE CALLERID %s" % new_callerid.encode())
+                new_callerid = contact["displayName"] + " (" + contact["numberType"] + ") (" + \
+                               contact["eMail"] + org + ") <" + number_nat.replace(" ", "") + ">"
 
             # Else use ONB
             else:
@@ -84,19 +79,21 @@ class FastAGI(socketserver.StreamRequestHandler):
                         reader = csv.reader(csvfile, delimiter=';')
                         for row in reader:
                             if row[1] == "00" + str(number.country_code):
-                                new_callerid_name = "\"" + row[0] + " <" + number_nat.replace("+", "00") + ">\""
-                                self.wfile.write(b"SET VARIABLE CALLERID %s" % new_callerid_name.encode())
+                                new_callerid = "\"" + row[0] + " <" + number_nat.replace("+", "00") + ">\""
                 else:
                     if nat_prefix == "01":
-                        new_callerid_name = "\"Mobilfunk Deutschland <" + number_nat.replace(" ", "") + ">\""
-                        self.wfile.write(b"SET VARIABLE CALLERID %s" % new_callerid_name.encode())
+                        new_callerid = "\"Mobilfunk Deutschland <" + number_nat.replace(" ", "") + ">\""
                     else:
                         with open(path + '/ONB/' + nat_prefix, newline='') as csvfile:
                             reader = csv.reader(csvfile, delimiter=';')
                             for row in reader:
                                 if row[0] == nat_vorwahl:
-                                    new_callerid_name = "\"" + row[1] + " <" + number_nat.replace(" ", "") + ">"
-                                    self.wfile.write(b"SET VARIABLE CALLERID %s" % new_callerid_name.encode())
+                                    new_callerid = "\"" + row[1] + " <" + number_nat.replace(" ", "") + ">"
+
+            print(new_callerid)
+            self.wfile.write(b"SET CALLERID \"%s\"" % new_callerid.encode())
+            self.wfile.flush()
+
 
         except TypeError as exception:
             sys.stderr.write('Unable to connect to agi://{} {}\n'.
