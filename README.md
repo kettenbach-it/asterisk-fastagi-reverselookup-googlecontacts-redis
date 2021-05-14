@@ -161,10 +161,10 @@ After this this dialplan variable "CALLERID" will be set as described above.
 ## References
 
 ### Source Code
-Can be found on [GitHub](https://github.com/kettenbach-it//asterisk-fastagi-reverselookup-googlecontacts-redis )
+Can be found on [GitHub](https://github.com/kettenbach-it/asterisk-fastagi-reverselookup-googlecontacts-redis )
 
 ### Docker Container Image
-Can be found on  [DockerHub](https://hub.docker.com/r/vkettenbach//asterisk-fastagi-reverselookup-googlecontacts-redis ).
+Can be found on  [DockerHub](https://hub.docker.com/r/vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis ).
 
 ## License
 GNU AGPL v3
