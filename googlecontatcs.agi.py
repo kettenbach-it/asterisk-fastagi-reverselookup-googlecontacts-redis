@@ -79,16 +79,16 @@ class FastAGI(socketserver.StreamRequestHandler):
                         reader = csv.reader(csvfile, delimiter=';')
                         for row in reader:
                             if row[1] == "00" + str(number.country_code):
-                                new_callerid = "\"" + row[0] + " <" + number_nat.replace("+", "00") + ">\""
+                                new_callerid = row[0] + " <" + number_nat.replace("+", "00") + ">"
                 else:
                     if nat_prefix == "01":
-                        new_callerid = "\"Mobilfunk Deutschland <" + number_nat.replace(" ", "") + ">\""
+                        new_callerid = "Mobilfunk Deutschland <" + number_nat.replace(" ", "") + ">"
                     else:
                         with open(path + '/ONB/' + nat_prefix, newline='') as csvfile:
                             reader = csv.reader(csvfile, delimiter=';')
                             for row in reader:
                                 if row[0] == nat_vorwahl:
-                                    new_callerid = "\"" + row[1] + " <" + number_nat.replace(" ", "") + ">"
+                                    new_callerid = row[1] + " <" + number_nat.replace(" ", "") + ">"
 
             print(datetime.now().strftime("%Y-%m-%d %H:%M:%S: ") + new_callerid)
             self.wfile.write(b"SET CALLERID \"%s\"" % new_callerid.encode())
