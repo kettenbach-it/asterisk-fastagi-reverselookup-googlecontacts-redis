@@ -55,7 +55,7 @@ services:
   # This is the FastAGI Service
   asterisk-fastagi-reverselookup-googlecontacts:
     build: .
-    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.1
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.2
     container_name: asterisk-fastagi-reverselookup-googlecontacts
     restart: unless-stopped
     network_mode: host
@@ -71,13 +71,13 @@ services:
   # This is the cron job that updates the redis database 
   # daily at 8am, 2pm and 6pm
   asterisk-fastagi-reverselookup-googlecontacts-cronjob:
-    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.1
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.2
     container_name: asterisk-fastagi-reverselookup-googlecontacts-cronjob
     restart: unless-stopped
     network_mode: host
     depends_on:
       - asterisk-fastagi-redis
-    command: [ "/usr/sbin/cron", "-f" , "-L",  "> /dev/stdout " ]
+    entrypoint: [ "cron.sh" ]
     environment:
       GOOGLE_ACCOUNTS: "user1@domain.com, user2@domain.com"  # Users whose contacts will be downloaded
       REDIS_HOST: "localhost"  # Hostname of Redis database
