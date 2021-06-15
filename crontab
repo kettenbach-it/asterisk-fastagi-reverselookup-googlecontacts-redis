@@ -1,4 +1,4 @@
 SHELL=/bin/bash
 BASH_ENV= /container.env
 @reboot      /usr/local/bin/python3 /srv/googlecontacts2redis.py > /proc/1/fd/1 2>/proc/1/fd/2
-* */4 * * * /usr/local/bin/python3 /srv/googlecontacts2redis.py > /proc/1/fd/1 2>/proc/1/fd/2
+0 */4 * * * /usr/local/bin/python3 /srv/googlecontacts2redis.py > /proc/1/fd/1 2>/proc/1/fd/2
