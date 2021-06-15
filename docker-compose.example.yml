@@ -23,7 +23,7 @@ services:
     network_mode: host
     depends_on:
       - asterisk-fastagi-redis
-    command: [ "/usr/sbin/cron", "-f" , "-L",  "> /dev/stdout " ]
+    entrypoint: ["/srv/cron.sh"]
     environment:
       GOOGLE_ACCOUNTS: "user1@domain.com, user2@domain.com"
       REDIS_HOST: "localhost"
