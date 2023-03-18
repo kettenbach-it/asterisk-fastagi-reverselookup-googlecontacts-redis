@@ -3,7 +3,7 @@ version: "3.7"
 services:
   asterisk-fastagi-reverselookup-googlecontacts:
     build: .
-    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.1
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.3
     container_name: asterisk-fastagi-reverselookup-googlecontacts
     restart: unless-stopped
     network_mode: host
@@ -17,7 +17,7 @@ services:
       TIMEOUT: 2
 
   asterisk-fastagi-reverselookup-googlecontacts-cronjob:
-    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.1
+    image: vkettenbach/asterisk-fastagi-reverselookup-googlecontacts-redis:1.0.3
     container_name: asterisk-fastagi-reverselookup-googlecontacts-cronjob
     restart: unless-stopped
     network_mode: host
